@@ -1,5 +1,11 @@
 # Избранное для платформы InSales
 
+## CDN
+
+```
+  <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.1.0/dist/favorites.js"></script>
+```
+
 ```js
 var Favorite = new Favorites({
   onUpdate: function (data) {
