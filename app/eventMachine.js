@@ -16,9 +16,7 @@ export default function eventMachine(name, $target) {
 
   // jquery events
   var event = jQuery.Event( name );
-  event['products'] = self.products;
-  event['variants'] = self.variants;
-  event['$target'] = $target || null;
+  event['insalesFavorites'] = _pub;
 
   $(document).trigger( event );
 

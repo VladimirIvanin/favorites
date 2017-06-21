@@ -151,7 +151,8 @@ export function getVariants (productList, variantIds) {
     $.each(productList, function(index, product) {
       $.each(product.variants, function(index, variant) {
         if (variantId == variant.id) {
-          result[variantId] = product;
+          result[variantId] = variant;
+          result[variantId].product = product;
         }
       });
     });

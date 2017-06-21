@@ -142,6 +142,10 @@ function triggerDataProduct($target, self, id) {
     if (!statusProduct.isAdded) {
       $target.addClass(self.options.classes.added);
     }
+
+    if (self.options.buttonNotAddedText) {
+      renderButtonText(self,  $target, statusProduct.isActive)
+    }
   }
 
   if (!statusProduct.isActive) {
@@ -152,8 +156,23 @@ function triggerDataProduct($target, self, id) {
     if (!statusProduct.notAdded) {
       $target.addClass(self.options.classes.notAdded);
     }
+    if (self.options.buttonNotAddedText) {
+      renderButtonText(self,  $target, statusProduct.isActive)
+    }
   }
 }
+
+
+function renderButtonText(self,  $target, isActive) {
+  if (isActive) {
+    var text = self.options.buttonAddedText || self.options.buttonNotAddedText;
+    $target.html(text);
+  }else{
+    var text = self.options.buttonNotAddedText || '';
+    $target.html(text);
+  }
+}
+
 
 export function getStatusProduct($target, productIds, id, addedClass, notAddedClass) {
   var status = {

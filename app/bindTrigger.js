@@ -39,6 +39,14 @@ export function bindTrigger() {
   });
 
   $(document).on(systemEvents.update, function(event) {
+    // шаблон списка продуктов (принимает переменную products)
+    self.options.productsListTemplate(event.insalesFavorites.products);
+    // шаблон списка вариантов (принимает переменную variants)
+    self.options.variantsListTemplate(event.insalesFavorites.variants);
+  });
+
+
+  $(document).on(systemEvents.update, function(event) {
     var template = self.options.counterTemplate
 
     if (self.productIds.length == 0) {

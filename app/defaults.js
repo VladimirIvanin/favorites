@@ -1,8 +1,8 @@
 export const defaults = {
   counterTemplate: '(%c%)', // regexp %c%
   counterTemplateEmpty: null, // regexp %c%
-  buttonAddedText: null, // текст активной кнопки
   buttonNotAddedText: null, // текст не активной кнопки
+  buttonAddedText: null, // текст активной кнопки
   productsListTemplate: function(){}, // шаблон списка продуктов (принимает переменную products)
   variantsListTemplate: function(){}, // шаблон списка вариантов (принимает переменную variants)
   debug: false,
