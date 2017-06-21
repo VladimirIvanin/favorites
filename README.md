@@ -56,4 +56,40 @@ var Favorite = new Favorites({
 ## Зависимости
 
 - jQuery 1.9+
-- localForage (для common js v2 не требуется)
+- localForage (для common.js v2 не требуется)
+
+## События / callbacks
+
+Модуль поддерживает EventBus(для common.js v2), jQuery events, а также обратные вызовы переданные в настройках.
+
+| Событие                  | Назначение                      | Callback |
+|--------------------------|---------------------------------|----------|
+| init:insales:favorites   | Инициализация                   | onInit   |
+| before:insales:favorites | Перед добавлением/удалением     | onBefore |
+| add:insales:favorites    | Товар добавлен в избранное      | onAdd    |
+| remove:insales:favorites | Товар удален из избранного      | onRemove |
+| update:insales:favorites | Обновление                      | onUpdate |
+| empty:insales:favorites  | В избранное не добавлены товары | onEmpty  |
+| filled:insales:favorites | В избранном есть товары         | onFilled |
+
+```js
+// EventBus
+EventBus.subscribe('add:insales:favorites', function (data) {
+  console.log('Товар добавлен в избранное');
+  console.log(data);
+});
+
+// jQuery
+$(document).on('add:insales:favorites', function(event) {
+  console.log('Товар добавлен в избранное');
+  console.log(event.insalesFavorites);
+});
+
+// callback
+var Favorite = new Favorites({
+  onAdd: function (data) {
+    console.log('Товар добавлен в избранное');
+    console.log(data);
+  }
+});
+```
