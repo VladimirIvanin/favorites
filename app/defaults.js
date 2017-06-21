@@ -1,7 +1,10 @@
 export const defaults = {
   counterTemplate: '(%c%)', // regexp %c%
   counterTemplateEmpty: null, // regexp %c%
-  replaceTitle: true,
+  buttonAddedText: null, // текст активной кнопки
+  buttonNotAddedText: null, // текст не активной кнопки
+  productsListTemplate: function(){}, // шаблон списка продуктов (принимает переменную products)
+  variantsListTemplate: function(){}, // шаблон списка вариантов (принимает переменную variants)
   debug: false,
   onFilled: function(){}, // В избранном есть товары
   onEmpty: function(){}, // В избранное не добавлены товары
@@ -10,6 +13,7 @@ export const defaults = {
   onInit: function(){}, // Инициализация
   onBefore: function(){}, // Перед действием
   onUpdate: function(){}, // Обновление
+  replaceTitle: true, // заменять title кнопок
   titles: {
     added: 'Добавлен в избранное',
     notAdded: 'Добавить в избранное'
@@ -39,11 +43,11 @@ export const systemEvents = {
 
 export const systemSelectors = {
   add: 'data-favorites-add', // добавить
-  addParam: 'data-favorites-add', // добавить
+  addParam: 'favorites-add', // добавить
   addVariant: 'data-favorites-variant-add', // добавить вариант
-  addVariantParam: 'data-favorites-variant-add', // добавить вариант
+  addVariantParam: 'favorites-variant-add', // добавить вариант
   addVariantProduct: 'data-favorites-variant-product', // добавить вариант
-  addVariantProductParam: 'data-favorites-variant-product', // добавить вариант
+  addVariantProductParam: 'favorites-variant-product', // добавить вариант
   remove: 'data-favorites-remove', // удалить
   removeParam: 'favorites-remove', // удалить
   counter: 'data-favorites-counter', // счетчик
