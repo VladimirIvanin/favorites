@@ -85,7 +85,7 @@ $(document).on('add:insales:favorites', function(event) {
   console.log(event.insalesFavorites);
 });
 
-// callback
+// Callback
 var Favorite = new Favorites({
   onAdd: function (data) {
     console.log('Товар добавлен в избранное');
