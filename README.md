@@ -6,6 +6,11 @@
   <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.2.0/dist/favorites.js"></script>
 ```
 
+
+## Простой пример
+
+> Важно! Кнопку добавления в избранное стоит размещать внутри формы продукта.
+
 ```js
 var Favorite = new Favorites({
   onUpdate: function (data) {
@@ -46,3 +51,9 @@ var Favorite = new Favorites({
   </button>
 </form>
 ```
+
+
+## Зависимости
+
+- jQuery 1.9+
+- localForage (для common js v2 не требуется)
