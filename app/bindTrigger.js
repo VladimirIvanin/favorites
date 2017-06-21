@@ -57,9 +57,9 @@ export function bindTrigger() {
     $counter.html( _counterContent );
 
     if (self.productIds.length == 0) {
-      $counter.addClass(self.options.classes.empty).removeClass(self.options.classes.filled)
+      $counter.addClass(self.options.classes.empty).removeClass(self.options.classes.full)
     }else{
-      $counter.removeClass(self.options.classes.empty).addClass(self.options.classes.filled)
+      $counter.removeClass(self.options.classes.empty).addClass(self.options.classes.full)
     }
   });
 

@@ -44,7 +44,7 @@ class Favorites {
         self.getProductList(localData.products).done(function (_products) {
           self.products = _products || {};
           self.variants = getVariants(_products, localData.variants) || {};
-          self.eventMachine(systemEvents.filled, null);
+          self.eventMachine(systemEvents.full, null);
           self.eventMachine(systemEvents.init, null);
           self.eventMachine(systemEvents.update, null);
         })

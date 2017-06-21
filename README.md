@@ -3,7 +3,7 @@
 ## CDN
 
 ```
-  <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.2.0/dist/favorites.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.3.0/dist/favorites.js"></script>
 ```
 
 
@@ -69,8 +69,8 @@ var Favorite = new Favorites({
 | add:insales:favorites    | Товар добавлен в избранное      | onAdd    |
 | remove:insales:favorites | Товар удален из избранного      | onRemove |
 | update:insales:favorites | Обновление                      | onUpdate |
-| empty:insales:favorites  | В избранное не добавлены товары | onEmpty  |
-| filled:insales:favorites | В избранном есть товары         | onFilled |
+| empty:insales:favorites  | В избранном нет товаров | onEmpty  |
+| full:insales:favorites | В избранном есть товары         | onFull |
 
 ```js
 // EventBus

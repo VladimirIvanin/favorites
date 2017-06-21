@@ -6,7 +6,7 @@ export const defaults = {
   productsListTemplate: function(){}, // шаблон списка продуктов (принимает переменную products)
   variantsListTemplate: function(){}, // шаблон списка вариантов (принимает переменную variants)
   debug: false,
-  onFilled: function(){}, // В избранном есть товары
+  onFull: function(){}, // В избранном есть товары
   onEmpty: function(){}, // В избранное не добавлены товары
   onAdd: function(){}, // Товар добавлен в избранное
   onRemove: function(){}, // Товар удален из избранного
@@ -22,7 +22,7 @@ export const defaults = {
     added: 'is-added',
     notAdded: 'not-added',
     empty: 'is-empty',
-    filled: 'is-filled'
+    full: 'is-full'
   }
 };
 
@@ -32,7 +32,7 @@ export const system = {
 }
 
 export const systemEvents = {
-  filled: 'filled:insales:favorites', // В избранном есть товары
+  full: 'full:insales:favorites', // В избранном есть товары
   empty: 'empty:insales:favorites', // В избранное не добавлены товары
   add: 'add:insales:favorites', // Товар добавлен в избранное
   remove: 'remove:insales:favorites', // Товар удален из избранного
@@ -53,5 +53,6 @@ export const systemSelectors = {
   counter: 'data-favorites-counter', // счетчик
   counterParam: 'favorites-counter', // счетчик
   trigger: 'data-favorites-trigger', // переключатель
-  triggerParam: 'favorites-trigger' // переключатель
+  triggerParam: 'favorites-trigger', // переключатель
+  clearFavorites: 'data-clear-favorites' // очистить избранное
 }
