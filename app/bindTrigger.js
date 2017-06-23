@@ -48,15 +48,15 @@ export function bindTrigger() {
 
   $(document).on(systemEvents.update, function(event) {
     var template = self.options.counterTemplate
-
-    if (self.productIds.length == 0) {
+    var productsSize = self.productIds.length;
+    if (productsSize == 0) {
       template = self.options.counterTemplateEmpty || self.options.counterTemplate;
     }
-    var _counterContent = template.replace( '%c%', self.productIds.length )
+    var _counterContent = template.replace( '%c%', productsSize )
     var $counter = $(getDataAttrName( systemSelectors.counter ));
-    $counter.html( _counterContent );
+    $counter.html( _counterContent ).data(systemSelectors.counterParam, productsSize).attr(systemSelectors.counter, productsSize);
 
-    if (self.productIds.length == 0) {
+    if (productsSize == 0) {
       $counter.addClass(self.options.classes.empty).removeClass(self.options.classes.full)
     }else{
       $counter.removeClass(self.options.classes.empty).addClass(self.options.classes.full)
