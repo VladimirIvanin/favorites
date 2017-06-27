@@ -93,3 +93,9 @@ var Favorite = new Favorites({
   }
 });
 ```
+
+## Плагины для InSales
+
+- [Отправка сообщений](https://github.com/VladimirIvanin/InSalesFeedback)
+- [Ранее просмотренные товары](https://github.com/VladimirIvanin/RecentlyView)
+- [Определение местоположения пользователя](https://github.com/VladimirIvanin/geoManager)
