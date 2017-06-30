@@ -1,5 +1,6 @@
 'use strict';
 import {system} from './defaults.js';
+import {convertProperties} from './convertProperties.js';
 
 /**
  * Получить массив товаров из системы
@@ -34,6 +35,9 @@ export function getProductList (productList) {
           var sizeProductsObject = Object.keys(productsObject).length;
           if (sizeProductsObject > 0) {
             self.logger('Товары из апи common js: ', productsObject);
+            $.each(productsObject, function(index, _product) {
+              convertProperties(_product);
+            });
             dfd.resolve( productsObject );
           }else{
             dfd.reject( {} );
@@ -56,12 +60,18 @@ export function getProductList (productList) {
           if (missingList.length > 0) {
             getApiProduct(self, missingList).done(function (_productsObject) {
               self.logger('Товары из стандартного апи: ', _productsObject);
+              $.each(_productsObject, function(index, _product) {
+                convertProperties(_product);
+              });
               dfd.resolve( $.extend(true, {}, _productsList, _productsObject) );
             })
             .fail(function (onFail) {
               dfd.reject( {} );
             });
           }else{
+            $.each(_productsList, function(index, _product) {
+              convertProperties(_product);
+            });
             dfd.resolve( _productsList );
           }
         }).fail(function () {
@@ -71,6 +81,9 @@ export function getProductList (productList) {
             if (sizeProductsObject > 0) {
               setLocalProduct(self, system.keyProducts, _productsObject)
               self.logger('Товары из стандартного апи: ', _productsObject);
+              $.each(_productsObject, function(index, _product) {
+                convertProperties(_product);
+              });
               dfd.resolve( convertProductList(_productsObject) );
             }else{
               dfd.reject( {} );
