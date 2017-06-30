@@ -1,6 +1,6 @@
 'use strict';
 import {system} from './defaults.js';
-import {convertProperties} from './convertProperties.js';
+import convertProperties from './convertProperties.js';
 
 /**
  * Получить массив товаров из системы
