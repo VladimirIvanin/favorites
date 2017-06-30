@@ -36,7 +36,7 @@ export function removeToFavorites($target, id) {
     self.variants = getVariants(_products, self.variantIds) || {};
 
     self.eventMachine(systemEvents.remove, $target);
-    if (self.variantIds.length == 0) {
+    if (Object.keys(self.products).length == 0) {
       self.eventMachine(systemEvents.empty, null);
     }
     self.eventMachine(systemEvents.update, $target);
@@ -45,7 +45,7 @@ export function removeToFavorites($target, id) {
       self.variants = {};
 
       self.eventMachine(systemEvents.remove, $target);
-      if (self.variantIds.length == 0) {
+      if (Object.keys(self.products).length == 0) {
         self.eventMachine(systemEvents.empty, null);
       }
       self.eventMachine(systemEvents.update, $target);
@@ -87,6 +87,9 @@ export function addToFavorites($target, id) {
     self.variants = getVariants(_products, self.variantIds) || {};
 
     self.eventMachine(systemEvents.add, $target);
+    if (Object.keys(self.products).length == 0) {
+      self.eventMachine(systemEvents.empty, null);
+    }
     self.eventMachine(systemEvents.update, $target);
   });
 
