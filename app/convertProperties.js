@@ -7,7 +7,7 @@ export default function  convertProperties (_product) {
 
     $.each( _product.characteristics, function( index, characteristic ){
       if (property.id === characteristic.property_id) {
-        (_product.parameters[ property.title ] || (_product.parameters[ property.title ] = [])).push(characteristic);
+        (_product.parameters[ property.permalink ] || (_product.parameters[ property.permalink ] = [])).push(characteristic);
       }
     });
 
