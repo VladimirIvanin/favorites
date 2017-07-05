@@ -1,5 +1,6 @@
 'use strict';
 import {defaults, systemEvents, system} from './defaults.js';
+import {patchNumber} from './patchNumber.js';
 
 export default function eventMachine(name, $target) {
   var self = this;
@@ -8,6 +9,11 @@ export default function eventMachine(name, $target) {
   _pub['products'] = self.products || {};
   _pub['variants'] = self.variants || {};
   _pub['$target'] = $target || null;
+
+  _pub['favorites'] = {
+    size: Object.keys(_pub.products).length,
+    totalPrice: getTotalPrice(_pub.products)
+  }
 
   // EventBus
   if (typeof EventBus == 'object' && EventBus.publish) {
@@ -43,4 +49,13 @@ function getMethodName(self, name) {
 
 var capitalize = function(_string) {
     return _string.charAt(0).toUpperCase() + _string.slice(1);
+}
+
+function getTotalPrice(products) {
+  var result = 0;
+  $.each(products, function(index, el) {
+    result += patchNumber(el.price);
+  });
+
+  return result;
 }

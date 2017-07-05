@@ -1,6 +1,7 @@
 'use strict;'
 import {defaults, systemEvents, system, systemSelectors} from './defaults.js';
 import {getVariants} from './getProductList.js';
+import {patchNumber} from './patchNumber.js';
 
 export function removeToFavorites($target, id) {
   var self = this;
@@ -203,12 +204,4 @@ function removeItemArray(_array, id) {
   }
 
   return _array;
-}
-
-function isFloat(n){
-  return Number(n) === n && n % 1 !== 0;
-}
-function patchNumber (num){
-  var thisNums = (isNaN(+num)) ? 1 : +num;
-  return (isFloat(thisNums)) ? thisNums.toFixed(0) : thisNums;
 }
