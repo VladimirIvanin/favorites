@@ -3,7 +3,7 @@
 ## CDN
 
 ```
-  <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.4.4/dist/favorites.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.4.5/dist/favorites.js"></script>
 ```
 
 
