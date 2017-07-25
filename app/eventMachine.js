@@ -7,6 +7,7 @@ export default function eventMachine(name, $target) {
 
   var _pub = {}
   _pub['products'] = self.products || {};
+  _pub['productsArray'] = Object.keys(_pub['products']).map((k) => _pub['products'][k]);
   _pub['variants'] = self.variants || {};
   _pub['$target'] = $target || null;
 
