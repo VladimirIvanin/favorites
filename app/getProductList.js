@@ -147,8 +147,12 @@ const getApiProduct = function (self, _products) {
 
     $.post('/products_by_id/'+ _products.join(',') +'.json')
       .done(function (_productsObject) {
-        self.logger('Товары из апи: ', _productsObject);
-        dfd.resolve( convertProductList(_productsObject) );
+        if (_productsObject.status == 'ok') {
+          self.logger('Товары из апи: ', _productsObject.products);
+          dfd.resolve( convertProductList(_productsObject.products) );
+        }else{
+          dfd.resolve( {} );
+        }
       })
       .fail(function (onFail) {
         dfd.resolve( {} );
@@ -177,7 +181,9 @@ export function getVariants (productList, variantIds) {
 export function convertProductList (productList) {
   var result = {};
   $.each(productList, function(index, el) {
-    result[el.id] = el;
+    if (el && el.id) {
+      result[el.id] = el;
+    }
   });
 
   return result;
