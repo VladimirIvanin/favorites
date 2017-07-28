@@ -5,9 +5,24 @@ import {patchNumber} from './patchNumber.js';
 export default function eventMachine(name, $target) {
   var self = this;
 
+  var _products = self.products || {};
+  var _variants = self.variants || {};
+
+  $.each(_products, function(index, _product) {
+    if (self.productIds.indexOf(_product.id) == -1) {
+      delete _products[index];
+    }
+  });
+
+  $.each(_variants, function(index, _variant) {
+    if (self.productIds.indexOf(_variant.product_id) == -1) {
+      delete _variants[index];
+    }
+  });
+
   var _pub = {}
-  _pub['products'] = self.products || {};
-  _pub['productsArray'] = Object.keys(_pub['products']).map((k) => _pub['products'][k]);
+  _pub['products'] = _products;
+  _pub['productsArray'] = Object.values(_products);
   _pub['variants'] = self.variants || {};
   _pub['$target'] = $target || null;
 

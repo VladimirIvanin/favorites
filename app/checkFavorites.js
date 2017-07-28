@@ -198,10 +198,7 @@ var unique = function (_array) {
 }
 
 function removeItemArray(_array, id) {
-  var index = _array.indexOf(id);
-  if (index > -1) {
-    _array.splice(index, 1);
-  }
-
-  return _array;
+  return _array.filter(function(i) {
+  	return i != id
+  });
 }
