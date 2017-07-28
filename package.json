@@ -1,6 +1,6 @@
 {
   "name": "insalesfavorites",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Избранное",
   "main": "dist/favorites.js",
   "scripts": {
