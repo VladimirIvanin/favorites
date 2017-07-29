@@ -1,6 +1,5 @@
 'use strict';
-import {defaults, systemEvents, system, systemSelectors} from './defaults.js';
-import {getStatusProduct} from './checkFavorites.js';
+import {systemEvents, systemSelectors} from './defaults.js';
 
 export function bindTrigger() {
   var self = this;

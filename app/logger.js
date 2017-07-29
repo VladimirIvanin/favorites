@@ -1,5 +1,4 @@
 'use strict';
-import {system} from './defaults.js';
 
 export default function logger (name, variable) {
   var self = this;

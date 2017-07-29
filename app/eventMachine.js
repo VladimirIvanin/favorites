@@ -1,5 +1,5 @@
 'use strict';
-import {defaults, systemEvents, system} from './defaults.js';
+import {systemEvents} from './defaults.js';
 import {patchNumber} from './patchNumber.js';
 
 export default function eventMachine(name, $target) {

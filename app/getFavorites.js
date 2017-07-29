@@ -1,5 +1,5 @@
 'use strict;'
-import {systemEvents, system} from './defaults.js';
+import {system} from './defaults.js';
 
 export function getFavorites() {
   var self = this;

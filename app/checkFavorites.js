@@ -1,5 +1,5 @@
 'use strict;'
-import {defaults, systemEvents, system, systemSelectors} from './defaults.js';
+import {systemEvents, systemSelectors} from './defaults.js';
 import {getVariants} from './getProductList.js';
 import {patchNumber} from './patchNumber.js';
 
@@ -168,11 +168,11 @@ function triggerDataProduct($target, self, id) {
 
 
 function renderButtonText(self,  $target, isActive) {
+  var text = self.options.buttonNotAddedText || '';
   if (isActive) {
-    var text = self.options.buttonAddedText || self.options.buttonNotAddedText;
+    text = self.options.buttonAddedText || self.options.buttonNotAddedText;
     $target.html(text);
   }else{
-    var text = self.options.buttonNotAddedText || '';
     $target.html(text);
   }
 }
