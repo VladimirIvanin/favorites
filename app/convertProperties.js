@@ -28,7 +28,8 @@ export default function  convertProperties (_product) {
   if (_product.variants) {
     $.each( _product.variants, function( index, variant ){
       if (variant.old_price) {
-        var _merge = Math.round( ((parseInt(variant.old_price) - parseInt(variant.price)) / parseInt(variant.old_price) * 100), 0 )
+        var _percent = ((parseInt(variant.old_price) - parseInt(variant.price)) / parseInt(variant.old_price) * 100);
+        var _merge = Math.round(_percent);
         if (_merge < 100) {
           _product.sale = _merge;
         }
