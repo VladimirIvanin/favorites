@@ -144,7 +144,8 @@ const getApiProduct = function (self, _products) {
 
   function _getLocalData(_products) {
     var dfd = jQuery.Deferred();
-
+    var _mainIds = _products.join(',');
+    if (_products.length > 0 && _mainIds != '') {
     $.post('/products_by_id/'+ _products.join(',') +'.json')
       .done(function (_productsObject) {
         if (_productsObject.status == 'ok') {
@@ -157,6 +158,9 @@ const getApiProduct = function (self, _products) {
       .fail(function (onFail) {
         dfd.resolve( {} );
       });
+    }else{
+      dfd.resolve( {} );
+    }
 
     return dfd.promise();
   }

@@ -63,6 +63,10 @@ export function addToFavorites($target, id) {
     self.options.classes.notAdded
   );
 
+  if (id === '') {
+    return;
+  }
+
   if (statusProduct.isActive && statusProduct.isAdded) {
     return;
   }
