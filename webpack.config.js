@@ -25,7 +25,7 @@ module.exports = {
             warnings: false
         }
     }),
-    new webpack.BannerPlugin('favorites v0.4.8\nhttps://github.com/VladimirIvanin/favorites/')
+    new webpack.BannerPlugin('favorites v0.5.0\nhttps://github.com/VladimirIvanin/favorites/')
   ],
 
   module: {

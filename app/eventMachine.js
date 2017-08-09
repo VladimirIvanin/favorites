@@ -21,8 +21,8 @@ export default function eventMachine(name, $target) {
   });
 
   var _pub = {}
-  _pub['products'] = _products;
-  _pub['productsArray'] = Object.values(_products);
+  _pub['products'] = Object.values(_products);
+  _pub['productsWithKeys'] = _products;
   _pub['variants'] = self.variants || {};
   _pub['$target'] = $target || null;
 
