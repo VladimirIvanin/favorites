@@ -3,7 +3,7 @@
 ## CDN
 
 ```
-  <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.5.1/dist/favorites.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.5.3/dist/favorites.js"></script>
 ```
 
 
@@ -97,8 +97,3 @@ var Favorite = new Favorites({
 });
 ```
 
-## Плагины для InSales
-
-- [Отправка сообщений](https://github.com/VladimirIvanin/InSalesFeedback)
-- [Ранее просмотренные товары](https://github.com/VladimirIvanin/RecentlyView)
-- [Определение местоположения пользователя](https://github.com/VladimirIvanin/geoManager)
