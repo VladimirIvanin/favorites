@@ -1,5 +1,6 @@
 'use strict';
 import {systemEvents, systemSelectors} from './defaults.js';
+import {patchNumber} from './patchNumber.js';
 
 export function bindTrigger() {
   var self = this;
@@ -10,6 +11,10 @@ export function bindTrigger() {
     self.eventMachine(systemEvents.before, $(this));
     var id = $(this).data( systemSelectors.triggerParam );
 
+    if (!testValidId(id)) {
+      console.warn('Не валидный id', id);
+      return;
+    }
     if (self.productIds.indexOf(id) > -1) {
       self.logger('removeToFavorites');
       self.removeToFavorites($(this), id);
@@ -23,7 +28,12 @@ export function bindTrigger() {
   $(document).on('click', getDataAttrName(systemSelectors.add), function(event) {
     event.preventDefault();
     self.eventMachine(systemEvents.before, $(this));
-    var id = $(this).data( systemSelectors.addParam)
+    var id = $(this).data( systemSelectors.addParam);
+
+    if (!testValidId(id)) {
+      console.warn('Не валидный id', id);
+      return;
+    };
 
     self.addToFavorites($(this), id);
   });
@@ -32,7 +42,12 @@ export function bindTrigger() {
   $(document).on('click', getDataAttrName(systemSelectors.remove), function(event) {
     event.preventDefault();
     self.eventMachine(systemEvents.before, $(this));
-    var id = $(this).data( systemSelectors.removeParam)
+    var id = $(this).data( systemSelectors.removeParam);
+
+    if (!testValidId(id)) {
+      console.warn('Не валидный id', id);
+      return;
+    }
 
     self.removeToFavorites($(this), id);
   });
@@ -60,6 +75,8 @@ export function bindTrigger() {
     }else{
       $counter.removeClass(self.options.classes.empty).addClass(self.options.classes.full)
     }
+    // переключить классы
+    self.checkFavoritesProducts()
   });
 
 }
@@ -68,4 +85,9 @@ function getDataAttrName(name, value) {
   const resultName = (value) ? name + '="'+value+'"' : name;
 
   return '[' + resultName + ']';
+}
+
+function testValidId(id) {
+  var patchId = patchNumber(id);
+  return patchId > 1;
 }

@@ -21,7 +21,7 @@ export default function eventMachine(name, $target) {
   });
 
   var _pub = {}
-  _pub['products'] = Object.values(_products);
+  _pub['products'] = getValues(_products);
   _pub['productsWithKeys'] = _products;
   _pub['variants'] = self.variants || {};
   _pub['$target'] = $target || null;
@@ -64,7 +64,7 @@ function getMethodName(self, name) {
 }
 
 var capitalize = function(_string) {
-    return _string.charAt(0).toUpperCase() + _string.slice(1);
+  return _string.charAt(0).toUpperCase() + _string.slice(1);
 }
 
 function getTotalPrice(products) {
@@ -73,5 +73,15 @@ function getTotalPrice(products) {
     result += patchNumber(el.price);
   });
 
+  return result;
+}
+
+function getValues(obj) {
+  var result = {};
+  Object.keys(obj).forEach(function (key) {
+    var val = obj[key];
+    result[key] = val;
+  });
+  
   return result;
 }
