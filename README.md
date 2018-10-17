@@ -3,7 +3,7 @@
 ## CDN
 
 ```
-  <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.5.4/dist/favorites.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/VladimirIvanin/favorites@0.5.5/dist/favorites.js"></script>
 ```
 
 
@@ -24,7 +24,7 @@ var Favorite = new Favorites({
   }
 });
 
-// если нужно переинициализировать классы на иконках 
+// если нужно переинициализировать классы на иконках
 // Favorite.checkFavoritesProducts()
 ```
 
@@ -183,4 +183,3 @@ var Favorite = new Favorites({
   }
 });
 ```
-

@@ -9,24 +9,24 @@ import convertProperties from './convertProperties.js';
 export function getProductList (productList) {
   var self = this;
   return $.when(_getProducts())
-  
+
   function _getProducts() {
     var dfd = jQuery.Deferred();
     var isArray = (Object.prototype.toString.call( productList ) == '[object Array]');
     var resultList = {};
-    
+
     if (!isArray) {
       self.logger('Список id, не является массивом', productList);
       dfd.reject(resultList);
     }
-    
+
     if (isArray && productList.length == 0) {
       self.logger('Список id пуст', productList);
       dfd.reject(resultList);
     }
-    
+
     if (isArray && productList.length > 0) {
-      
+
       // товары с помощью common js v2
       if (typeof Products == 'object' && Products.getList) {
         Products.getList(productList)
@@ -52,15 +52,16 @@ export function getProductList (productList) {
           $.each(_productsObject, function(index, _product) {
             convertProperties(_product);
           });
-          dfd.resolve( $.extend(true, {}, _productsList, _productsObject) );
+
+          dfd.resolve( _productsObject );
         })
         .fail(function (onFail) {
           dfd.reject( {} );
         });
       }
-      
+
     }
-    
+
     return dfd.promise();
   }
 }
