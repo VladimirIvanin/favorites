@@ -29,23 +29,30 @@ export function getProductList (productList) {
 
       // товары с помощью common js v2
       if (typeof Products == 'object' && Products.getList) {
+        // getList 2 раза пока не исправят баг
         Products.getList(productList)
-        .done(function (_productsObject) {
-          var productsObject = convertProductList(_productsObject);
-          var sizeProductsObject = Object.keys(productsObject).length;
-          if (sizeProductsObject > 0) {
-            self.logger('Товары из апи common js: ', productsObject);
-            $.each(productsObject, function(index, _product) {
-              convertProperties(_product);
-            });
-            dfd.resolve( productsObject );
-          }else{
+        .done(function () {
+          Products.getList(productList)
+          .done(function (_productsObject) {
+            var productsObject = convertProductList(_productsObject);
+            var sizeProductsObject = Object.keys(productsObject).length;
+            if (sizeProductsObject > 0) {
+              self.logger('Товары из апи common js: ', productsObject);
+              $.each(productsObject, function(index, _product) {
+                convertProperties(_product);
+              });
+              dfd.resolve( productsObject );
+            }else{
+              dfd.reject( {} );
+            }
+          })
+          .fail(function (onFail) {
             dfd.reject( {} );
-          }
+          });
         })
-        .fail(function (onFail) {
-          dfd.reject( {} );
-        });
+      .fail(function (onFail) {
+        dfd.reject( {} );
+      });
       }else{
         getApiProduct(self, productList).done(function (_productsObject) {
           self.logger('Товары из стандартного апи: ', _productsObject);
