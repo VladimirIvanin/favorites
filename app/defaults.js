@@ -29,6 +29,7 @@ export const defaults = {
 export const system = {
   keyProducts: 'favorites_products', // ключ от локальных товаров
   keyFavorites: 'favorites_data', // ключ от объекта плагина
+  keyStore: 'favorites_store_insales', // ключ от объекта плагина
 }
 
 export const systemEvents = {

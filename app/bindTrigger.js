@@ -4,6 +4,7 @@ import {patchNumber} from './patchNumber.js';
 
 export function bindTrigger() {
   var self = this;
+  self.logger('bindTrigger');
 
   // Переключатель
   $(document).on('click', getDataAttrName(systemSelectors.trigger), function(event) {
