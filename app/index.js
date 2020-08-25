@@ -5,7 +5,7 @@ import {getProductList,getVariants} from './getProductList.js';
 import {checkFavoritesProducts,addToFavorites,removeToFavorites} from './checkFavorites.js';
 import {bindTrigger} from './bindTrigger.js';
 import {getFavorites, setFavorites} from './getFavorites.js';
-import initLocalforage from './initLocalforage.js';
+import initLocalforage from './initlocalforage.js';
 import logger from './logger.js';
 import eventMachine from './eventMachine.js';
 
@@ -29,47 +29,55 @@ class Favorites {
     this.checkFavoritesProducts = checkFavoritesProducts;
     this.addToFavorites = addToFavorites;
     this.removeToFavorites = removeToFavorites;
+    this.store = {};
 
-    // Localforage
+    // self.store
     initLocalforage(function () {
-      // получить id товаров из хранилища
-      self.getFavorites().done(function (localData) {
-        self.productIds = localData.products || [];
-        self.variantIds = localData.variants || [];
-        // биндинг кликов
-        self.bindTrigger();
-        // переключение классов
-        self.checkFavoritesProducts();
-        // получаем объекты товаров, присваиваем вариантам товар
-        self.getProductList(localData.products).done(function (_products) {
-          self.products = _products || {};
-          self.variants = getVariants(_products, localData.variants) || {};
-          if (Object.keys(self.products).length == 0) {
+      self.store = localforage.createInstance({
+        name: system.keyFavorites
+      });
+
+      self.store.ready().then(function() {
+        self.getFavorites().done(function (localData) {
+          self.productIds = localData.products || [];
+          self.variantIds = localData.variants || [];
+          // биндинг кликов
+          self.bindTrigger();
+          // переключение классов
+          self.checkFavoritesProducts();
+          // получаем объекты товаров, присваиваем вариантам товар
+          self.getProductList(localData.products).done(function (_products) {
+            self.products = _products || {};
+            self.variants = getVariants(_products, localData.variants) || {};
+            if (Object.keys(self.products).length == 0) {
+              self.eventMachine(systemEvents.empty, null);
+              self.eventMachine(systemEvents.init, null);
+              self.eventMachine(systemEvents.update, null);
+            }else{
+              self.eventMachine(systemEvents.full, null);
+              self.eventMachine(systemEvents.init, null);
+              self.eventMachine(systemEvents.update, null);
+            }
+          })
+          .fail(function () {
             self.eventMachine(systemEvents.empty, null);
             self.eventMachine(systemEvents.init, null);
             self.eventMachine(systemEvents.update, null);
-          }else{
-            self.eventMachine(systemEvents.full, null);
-            self.eventMachine(systemEvents.init, null);
-            self.eventMachine(systemEvents.update, null);
-          }
+          });
         })
         .fail(function () {
+          // биндинг кликов
+          self.bindTrigger();
+          // переключение классов
+          self.checkFavoritesProducts();
+          // избранное пусто
           self.eventMachine(systemEvents.empty, null);
           self.eventMachine(systemEvents.init, null);
           self.eventMachine(systemEvents.update, null);
-        });
-      })
-      .fail(function () {
-        // биндинг кликов
-        self.bindTrigger();
-        // переключение классов
-        self.checkFavoritesProducts();
-        // избранное пусто
-        self.eventMachine(systemEvents.empty, null);
-        self.eventMachine(systemEvents.init, null);
-        self.eventMachine(systemEvents.update, null);
-      })
+        })
+      }).catch(function (e) {
+          console.log(e);
+      });
     })
   }
 }
