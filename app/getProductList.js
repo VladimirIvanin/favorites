@@ -8,12 +8,14 @@ import convertProperties from './convertProperties.js';
 export function getProductList (productList) {
   var self = this;
   self.logger('getProductList start');
-  return $.when(_getProducts())
 
-  function _getProducts() {
+  function _getProducts(productList) {
+    self.logger('_getProducts call', productList);
     var dfd = jQuery.Deferred();
-    var isArray = (Object.prototype.toString.call( productList ) == '[object Array]');
+    var isArray = Array.isArray(productList) || (Object.prototype.toString.call( productList ) == '[object Array]');
     var resultList = {};
+
+    self.logger('list isArray', isArray);
 
     if (!isArray) {
       self.logger('Список id, не является массивом', productList);
@@ -26,34 +28,30 @@ export function getProductList (productList) {
     }
 
     if (isArray && productList.length > 0) {
-
+      self.logger('typeof Products', typeof Products);
       // товары с помощью common js v2
-      if (typeof Products == 'object' && Products.getList) {
-        // getList 2 раза пока не исправят баг
-        Products.getList(productList)
-        .done(function () {
+      if (!self.options.useApi && typeof Products == 'object' && typeof Products.getList == 'function') {
           Products.getList(productList)
-          .done(function (_productsObject) {
-            var productsObject = convertProductList(_productsObject);
-            var sizeProductsObject = Object.keys(productsObject).length;
-            if (sizeProductsObject > 0) {
-              self.logger('Товары из апи common js: ', productsObject);
-              $.each(productsObject, function(index, _product) {
-                convertProperties(_product);
-              });
-              dfd.resolve( productsObject );
-            }else{
+            .done(function (_productsObject) {
+              self.logger('getList done', _productsObject);
+              var productsObject = convertProductList(_productsObject);
+              var sizeProductsObject = Object.keys(productsObject).length;
+              if (sizeProductsObject > 0) {
+                self.logger('Товары из апи common js: ', productsObject);
+                $.each(productsObject, function(index, _product) {
+                  convertProperties(_product);
+                });
+                dfd.resolve( productsObject );
+              }else{
+                dfd.reject( {} );
+              }
+            })
+            .fail(function (onFail) {
+              self.logger('getList fail', onFail);
               dfd.reject( {} );
-            }
-          })
-          .fail(function (onFail) {
-            dfd.reject( {} );
-          });
-        })
-      .fail(function (onFail) {
-        dfd.reject( {} );
-      });
+            });
       }else{
+        self.logger('getApiProduct');
         getApiProduct(self, productList).done(function (_productsObject) {
           self.logger('Товары из стандартного апи: ', _productsObject);
           $.each(_productsObject, function(index, _product) {
@@ -76,6 +74,8 @@ export function getProductList (productList) {
 
     return dfd.promise();
   }
+
+  return $.when(_getProducts(productList))
 }
 // получить товары из апи
 // _productsObject - объект

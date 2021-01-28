@@ -6,6 +6,7 @@ export const defaults = {
   productsListTemplate: function(){}, // шаблон списка продуктов (принимает переменную products)
   variantsListTemplate: function(){}, // шаблон списка вариантов (принимает переменную variants)
   debug: false,
+  useApi: false,
   onFull: function(){}, // В избранном есть товары
   onEmpty: function(){}, // В избранное не добавлены товары
   onAdd: function(){}, // Товар добавлен в избранное
