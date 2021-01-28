@@ -8,8 +8,6 @@ export default function logger (name, variable) {
     if (variable) {
       console.log(variable);
     }
-    console.log('///////////////////');
-    console.log('///favorites//////');
-    console.log('/////////////////');
+    console.info('=============');
   }
 };

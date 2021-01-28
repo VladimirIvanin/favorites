@@ -43,12 +43,19 @@ class Favorites {
           self.logger('getFavorites done');
           self.productIds = localData.products || [];
           self.variantIds = localData.variants || [];
-          // биндинг кликов
-          self.bindTrigger();
-          // переключение классов
-          self.checkFavoritesProducts();
+          try {
+            // биндинг кликов
+            self.bindTrigger();
+            // переключение классов
+            self.checkFavoritesProducts();
+          } catch (e) {
+            console.log(e)
+          }
+
+          self.logger('productIds done', self.productIds);
 
           if (self.productIds.length == 0) {
+            self.logger('getFavorites empty');
             // избранное пусто
             self.eventMachine(systemEvents.empty, null);
             self.eventMachine(systemEvents.init, null);
@@ -58,6 +65,7 @@ class Favorites {
             self.getProductList(localData.products).done(function (_products) {
               self.products = _products || {};
               self.variants = getVariants(_products, localData.variants) || {};
+              self.logger('getProductList done', _products);
               if (Object.keys(self.products).length == 0) {
                 self.eventMachine(systemEvents.empty, null);
                 self.eventMachine(systemEvents.init, null);
@@ -69,6 +77,7 @@ class Favorites {
               }
             })
             .fail(function () {
+              self.logger('getProductList fail');
               self.eventMachine(systemEvents.empty, null);
               self.eventMachine(systemEvents.init, null);
               self.eventMachine(systemEvents.update, null);

@@ -1,4 +1,3 @@
-'use strict';
 import {system} from './defaults.js';
 import convertProperties from './convertProperties.js';
 
@@ -8,6 +7,7 @@ import convertProperties from './convertProperties.js';
  */
 export function getProductList (productList) {
   var self = this;
+  self.logger('getProductList start');
   return $.when(_getProducts())
 
   function _getProducts() {
@@ -67,6 +67,11 @@ export function getProductList (productList) {
         });
       }
 
+    }else{
+      setTimeout(function () {
+        self.logger('!isArray');
+        dfd.reject( {} );
+      }, 100)
     }
 
     return dfd.promise();
@@ -74,7 +79,7 @@ export function getProductList (productList) {
 }
 // получить товары из апи
 // _productsObject - объект
-const getApiProduct = function (self, _products) {
+var getApiProduct = function (self, _products) {
 
   return $.when(_getLocalData(_products))
 

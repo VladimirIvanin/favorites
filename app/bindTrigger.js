@@ -83,7 +83,7 @@ export function bindTrigger() {
 }
 
 function getDataAttrName(name, value) {
-  const resultName = (value) ? name + '="'+value+'"' : name;
+  let resultName = (value) ? name + '="'+value+'"' : name;
 
   return '[' + resultName + ']';
 }
