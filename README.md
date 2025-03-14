@@ -7,8 +7,8 @@
 ```js
 var Favorite = new Favorites({
   // debug: true,
-  buttonNotAddedText: 'Добавлен в избранное', // текст не активной кнопки
-  buttonAddedText: 'Добавить в избранное', // текст активной кнопки
+  buttonNotAddedText: 'Добавить в избранное', // текст неактивной кнопки
+  buttonAddedText: 'Добавлен в избранное', // текст активной кнопки
   onUpdate: function (data) {
     console.log(data.products);
   }
@@ -19,7 +19,6 @@ var Favorite = new Favorites({
 ```
 
 ```html
-
 <p>
   Счетчик избранного: <span data-favorites-counter></span>
 </p>
@@ -51,20 +50,32 @@ var Favorite = new Favorites({
 </form>
 ```
 
+## Параметры
+
+| Параметр | Тип | По умолчанию | Описание |
+|----------|-----|-------------|----------|
+| counterTemplate | string | '(%c%)' | Шаблон счетчика, %c% заменяется на количество |
+| counterTemplateEmpty | string | null | Шаблон пустого счетчика |
+| buttonNotAddedText | string | null | Текст неактивной кнопки |
+| buttonAddedText | string | null | Текст активной кнопки |
+| debug | boolean | false | Режим отладки |
+| replaceTitle | boolean | true | Заменять title кнопок |
+| titles | object | { added: 'Добавлен в избранное', notAdded: 'Добавить в избранное' } | Тексты для title |
+| classes | object | { added: 'is-added', notAdded: 'not-added', empty: 'is-empty', full: 'is-full' } | CSS классы |
 
 ## События / callbacks
 
-Модуль поддерживает EventBus (для common.js v2)
+Модуль поддерживает EventBus (для common.js v2) и jQuery события
 
-| Событие                  | Назначение                      | Callback |
-|--------------------------|---------------------------------|----------|
-| init:insales:favorites   | Инициализация                   | onInit   |
-| before:insales:favorites | Перед добавлением/удалением     | onBefore |
-| add:insales:favorites    | Товар добавлен в избранное      | onAdd    |
-| remove:insales:favorites | Товар удален из избранного      | onRemove |
-| update:insales:favorites | Обновление                      | onUpdate |
-| empty:insales:favorites  | В избранном нет товаров | onEmpty  |
-| full:insales:favorites | В избранном есть товары         | onFull |
+| Событие | Назначение | Callback |
+|---------|-----------|----------|
+| init:insales:favorites | Инициализация | onInit |
+| before:insales:favorites | Перед добавлением/удалением | onBefore |
+| add:insales:favorites | Товар добавлен в избранное | onAdd |
+| remove:insales:favorites | Товар удален из избранного | onRemove |
+| update:insales:favorites | Обновление | onUpdate |
+| empty:insales:favorites | В избранном нет товаров | onEmpty |
+| full:insales:favorites | В избранном есть товары | onFull |
 
 ```js
 // EventBus
@@ -72,7 +83,6 @@ EventBus.subscribe('add:insales:favorites', function (data) {
   console.log('Товар добавлен в избранное');
   console.log(data);
 });
-
 
 // Callback
 var Favorite = new Favorites({
@@ -82,3 +92,12 @@ var Favorite = new Favorites({
   }
 });
 ```
+
+## HTML атрибуты
+
+| Атрибут | Описание |
+|---------|----------|
+| data-favorites-trigger="ID" | Переключатель (добавить/удалить) |
+| data-favorites-add="ID" | Только добавить в избранное |
+| data-favorites-remove="ID" | Только удалить из избранного |
+| data-favorites-counter | Счетчик избранного |
