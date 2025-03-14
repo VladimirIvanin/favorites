@@ -3,10 +3,7 @@ export const defaults = {
   counterTemplateEmpty: null, // regexp %c%
   buttonNotAddedText: null, // текст не активной кнопки
   buttonAddedText: null, // текст активной кнопки
-  productsListTemplate: function(){}, // шаблон списка продуктов (принимает переменную products)
-  variantsListTemplate: function(){}, // шаблон списка вариантов (принимает переменную variants)
   debug: false,
-  useApi: false,
   onFull: function(){}, // В избранном есть товары
   onEmpty: function(){}, // В избранное не добавлены товары
   onAdd: function(){}, // Товар добавлен в избранное
@@ -28,8 +25,8 @@ export const defaults = {
 };
 
 export const system = {
-  keyProducts: 'favorites_products', // ключ от локальных товаров
-  keyFavorites: 'favorites_data', // ключ от объекта плагина
+  keyProducts: 'favorites_products_js', // ключ от локальных товаров
+  keyFavorites: 'favorites_data_server', // ключ от объекта плагина
   keyStore: 'favorites_store_insales', // ключ от объекта плагина
 }
 

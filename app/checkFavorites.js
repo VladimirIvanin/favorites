@@ -1,12 +1,10 @@
-'use strict;'
 import {systemEvents, systemSelectors} from './defaults.js';
-import {getVariants} from './getProductList.js';
-import {patchNumber} from './patchNumber.js';
+import { kebabToCamel } from './bindTrigger.js';
 
-export function removeToFavorites($target, id) {
-  var self = this;
-  var statusProduct = getStatusProduct(
-    $target, self.productIds,
+export function removeToFavorites(target, id) {
+  const self = this;
+  const statusProduct = getStatusProduct(
+    target, self.productIds,
     id,
     self.options.classes.added,
     self.options.classes.notAdded
@@ -16,48 +14,28 @@ export function removeToFavorites($target, id) {
     return;
   }
 
-  self.productIds = removeItemArray(self.productIds, id);
-  self.productIds = unique(self.productIds);
-
-  var _variantId = getVariantId($target);
-  if (_variantId) {
-    self.variantIds = removeItemArray(self.variantIds, _variantId);
-    self.variantIds = unique(self.variantIds);
-  }
-
-  self.setFavorites({
-    products: self.productIds,
-    variants: self.variantIds
-  });
-
-  triggerDataProduct($target, self, id)
-
-  self.getProductList(self.productIds).done(function (_products) {
-    self.products = _products || {};
-    self.variants = getVariants(_products, self.variantIds) || {};
-
-    self.eventMachine(systemEvents.remove, $target);
-    if (Object.keys(self.products).length == 0) {
-      self.eventMachine(systemEvents.empty, null);
-    }
-    self.eventMachine(systemEvents.update, $target);
-  }).fail(function () {
-      self.products = {};
-      self.variants = {};
-
-      self.eventMachine(systemEvents.remove, $target);
-      if (Object.keys(self.products).length == 0) {
-        self.eventMachine(systemEvents.empty, null);
-      }
-      self.eventMachine(systemEvents.update, $target);
-  });
-
+  self.removeFavorite(id)
+    .then(response => {
+        if (response) {
+          self.updateProducts(response.products || [])
+        } else {
+          self.updateProducts([])
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        self.updateProducts([])
+      })
+      .finally(() => {
+         updateProductStatus(target, self, id);
+         handleProductListUpdate(self, target, systemEvents.remove);
+      });
 }
 
-export function addToFavorites($target, id) {
-  var self = this;
-  var statusProduct = getStatusProduct(
-    $target, self.productIds,
+export function addToFavorites(target, id) {
+  const self = this;
+  const statusProduct = getStatusProduct(
+    target, self.productIds,
     id,
     self.options.classes.added,
     self.options.classes.notAdded
@@ -71,138 +49,112 @@ export function addToFavorites($target, id) {
     return;
   }
 
-  self.productIds.push(id);
-  self.productIds = unique(self.productIds);
 
-  var _variantId = getVariantId($target);
-  if (_variantId) {
-    self.variantIds.push(_variantId);
-    self.variantIds = unique(self.variantIds);
-  }
-
-  self.setFavorites({
-    products: self.productIds,
-    variants: self.variantIds
-  });
-
-  triggerDataProduct($target, self, id)
-
-  self.getProductList(self.productIds).done(function (_products) {
-    self.products = _products || {};
-    self.variants = getVariants(_products, self.variantIds) || {};
-
-    self.eventMachine(systemEvents.add, $target);
-    if (Object.keys(self.products).length == 0) {
-      self.eventMachine(systemEvents.empty, null);
-    }
-    self.eventMachine(systemEvents.update, $target);
-  });
-
+  self.setFavorites(id)
+    .then(response => {
+      if (response) {
+        self.updateProducts(response.products || [])
+      } else {
+        self.updateProducts([])
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      self.updateProducts([])
+    })
+    .finally(() => {
+        updateProductStatus(target, self, id);
+        handleProductListUpdate(self, target, systemEvents.add);
+    });
 }
 
-function getVariantId($target) {
-  var result = false;
-
-  var $form = $target.parents('form:first');
-  var $productBlock = $target.parents('[data-product-id]:first');
-
-  var $variant_id = $productBlock.find('[name="variant_id"]');
-  if ($variant_id.length > 0) {
-    result = patchNumber( $variant_id.val() )
-  }else{
-    $variant_id = $form.find('[name="variant_id"]');
-    if ($variant_id.length > 0) {
-      result = patchNumber( $variant_id.val() )
+function handleProductListUpdate(self, target, eventType) {
+  if (self.products.length === 0) {
+    self.eventMachine(eventType, target);
+    if (Object.keys(self.products).length === 0) {
+      self.eventMachine(systemEvents.empty, null);
     }
+    self.eventMachine(systemEvents.update, target);
+  } else {
+    updateProductsAndTriggerEvents(self, target, eventType);
   }
+}
 
-  return result;
+function updateProductsAndTriggerEvents(self, target, eventType) { 
+  self.eventMachine(eventType, target);
+  if (Object.keys(self.products).length === 0) {
+    self.eventMachine(systemEvents.empty, null);
+  }
+  self.eventMachine(systemEvents.update, target);
 }
 
 // переключить статусы
 export function checkFavoritesProducts() {
-  var self = this;
-  $('['+systemSelectors.trigger+']').each(function(index, val) {
-    triggerDataProduct($(this), self, $(this).data(systemSelectors.triggerParam))
+  const self = this;
+  
+  document.querySelectorAll(`[${systemSelectors.trigger}]`).forEach(element => {
+    updateProductStatus(element, self, element.dataset[kebabToCamel(systemSelectors.triggerParam)]);
   });
-  $('['+systemSelectors.add+']').each(function(index, val) {
-    triggerDataProduct($(this), self, $(this).data(systemSelectors.addParam))
+  
+  document.querySelectorAll(`[${systemSelectors.add}]`).forEach(element => {
+    updateProductStatus(element, self, element.dataset[kebabToCamel(systemSelectors.addParam)]);
   });
-  $('['+systemSelectors.remove+']').each(function(index, val) {
-    triggerDataProduct($(this), self, $(this).data(systemSelectors.removeParam))
+  
+  document.querySelectorAll(`[${systemSelectors.remove}]`).forEach(element => {
+    updateProductStatus(element, self, element.dataset[kebabToCamel(systemSelectors.removeParam)]);
   });
 }
 
 // переключить статус кнопки продукта
-function triggerDataProduct($target, self, id) {
-  var statusProduct = getStatusProduct(
-    $target, self.productIds,
+function updateProductStatus(target, self, id) {
+  const statusProduct = getStatusProduct(
+    target, self.productIds,
     id,
     self.options.classes.added,
     self.options.classes.notAdded
   );
 
   if (statusProduct.isActive) {
-    $target.removeClass(self.options.classes.notAdded);
+    target.classList.remove(self.options.classes.notAdded);
     if (self.options.replaceTitle) {
-      $target.attr('title', self.options.titles.added);
+      target.setAttribute('title', self.options.titles.added);
     }
     if (!statusProduct.isAdded) {
-      $target.addClass(self.options.classes.added);
+      target.classList.add(self.options.classes.added);
     }
 
     if (self.options.buttonNotAddedText) {
-      renderButtonText(self,  $target, statusProduct.isActive)
+      renderButtonText(self, target, statusProduct.isActive);
     }
   }
 
   if (!statusProduct.isActive) {
-    $target.removeClass(self.options.classes.added);
+    target.classList.remove(self.options.classes.added);
     if (self.options.replaceTitle) {
-      $target.attr('title', self.options.titles.notAdded);
+      target.setAttribute('title', self.options.titles.notAdded);
     }
     if (!statusProduct.notAdded) {
-      $target.addClass(self.options.classes.notAdded);
+      target.classList.add(self.options.classes.notAdded);
     }
     if (self.options.buttonNotAddedText) {
-      renderButtonText(self,  $target, statusProduct.isActive)
+      renderButtonText(self, target, statusProduct.isActive);
     }
   }
 }
 
-
-function renderButtonText(self,  $target, isActive) {
-  var text = self.options.buttonNotAddedText || '';
+function renderButtonText(self, target, isActive) {
+  let text = self.options.buttonNotAddedText || '';
   if (isActive) {
     text = self.options.buttonAddedText || self.options.buttonNotAddedText;
-    $target.html(text);
-  }else{
-    $target.html(text);
   }
+  target.innerHTML = text;
 }
 
-
-export function getStatusProduct($target, productIds, id, addedClass, notAddedClass) {
-  var status = {
-    isActive: productIds.indexOf(id) > -1,
-    isAdded: $target.hasClass(addedClass),
-    notAdded: $target.hasClass(notAddedClass),
-  }
+export function getStatusProduct(target, productIds, id, addedClass, notAddedClass) {
+  const status = {
+    isActive: productIds.includes(Number(id)),
+    isAdded: target.classList.contains(addedClass),
+    notAdded: target.classList.contains(notAddedClass),
+  };
   return status;
-}
-
-var unique = function (_array) {
-  var unique = [];
-  for (var i = 0; i < _array.length; i++) {
-    if (unique.indexOf(_array[i]) == -1) {
-      unique.push(_array[i]);
-    }
-  }
-  return unique;
-}
-
-function removeItemArray(_array, id) {
-  return _array.filter(function(i) {
-  	return i != id
-  });
 }

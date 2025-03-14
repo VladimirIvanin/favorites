@@ -1,7 +1,7 @@
 'use strict';
 
-export default function logger (name, variable) {
-  var self = this;
+export default function logger(name, variable) {
+  const self = this;
   if (self.options.debug) {
     console.info('==favorites==');
     console.log(name);
@@ -10,4 +10,4 @@ export default function logger (name, variable) {
     }
     console.info('=============');
   }
-};
+}

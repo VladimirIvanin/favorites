@@ -3,92 +3,114 @@ import {systemEvents, systemSelectors} from './defaults.js';
 import {patchNumber} from './patchNumber.js';
 
 export function bindTrigger() {
-  var self = this;
+  const self = this;
   self.logger('bindTrigger');
 
-  // Переключатель
-  $(document).on('click', getDataAttrName(systemSelectors.trigger), function(event) {
+  // Helper functions
+  const getElement = (selector) => document.querySelector(selector);
+  const getAllElements = (selector) => document.querySelectorAll(selector);
+  
+  const handleFavoriteAction = (event, idParam, action) => {
     event.preventDefault();
-    self.eventMachine(systemEvents.before, $(this));
-    var id = $(this).data( systemSelectors.triggerParam );
+    const target = event.target.closest(getDataAttrName(idParam.selector));
+    if (!target) return;
+    
+    self.eventMachine(systemEvents.before, target);
+    const id = target.dataset[kebabToCamel(idParam.param)];
 
-    if (!testValidId(id)) {
+    if (!isValidId(id)) {
       console.warn('Не валидный id', id);
       return;
     }
-    if (self.productIds.indexOf(id) > -1) {
-      self.logger('removeToFavorites');
-      self.removeToFavorites($(this), id);
-    }else{
-      self.logger('addToFavorites');
-      self.addToFavorites($(this), id);
+    
+    if (action === 'toggle') {
+      if (self.productIds.includes(Number(id))) {
+        self.logger('removeToFavorites');
+        self.removeToFavorites(target, Number(id));
+      } else {
+        self.logger('addToFavorites');
+        self.addToFavorites(target, Number(id));
+      }
+    } else if (action === 'add') {
+      self.addToFavorites(target, Number(id));
+    } else if (action === 'remove') {
+      self.removeToFavorites(target, Number(id));
+    }
+  };
+
+  // Переключатель
+  document.addEventListener('click', (event) => {
+    const triggerElement = event.target.closest(getDataAttrName(systemSelectors.trigger));
+    if (triggerElement) {
+      handleFavoriteAction(event, {
+        selector: systemSelectors.trigger,
+        param: systemSelectors.triggerParam
+      }, 'toggle');
     }
   });
 
   // Добавить в избранное
-  $(document).on('click', getDataAttrName(systemSelectors.add), function(event) {
-    event.preventDefault();
-    self.eventMachine(systemEvents.before, $(this));
-    var id = $(this).data( systemSelectors.addParam);
-
-    if (!testValidId(id)) {
-      console.warn('Не валидный id', id);
-      return;
-    };
-
-    self.addToFavorites($(this), id);
+  document.addEventListener('click', (event) => {
+    const addElement = event.target.closest(getDataAttrName(systemSelectors.add));
+    if (addElement) {
+      handleFavoriteAction(event, {
+        selector: systemSelectors.add,
+        param: systemSelectors.addParam
+      }, 'add');
+    }
   });
 
   // Удалить из избранного
-  $(document).on('click', getDataAttrName(systemSelectors.remove), function(event) {
-    event.preventDefault();
-    self.eventMachine(systemEvents.before, $(this));
-    var id = $(this).data( systemSelectors.removeParam);
-
-    if (!testValidId(id)) {
-      console.warn('Не валидный id', id);
-      return;
+  document.addEventListener('click', (event) => {
+    const removeElement = event.target.closest(getDataAttrName(systemSelectors.remove));
+    if (removeElement) {
+      handleFavoriteAction(event, {
+        selector: systemSelectors.remove,
+        param: systemSelectors.removeParam
+      }, 'remove');
     }
-
-    self.removeToFavorites($(this), id);
   });
 
-  $(document).on(systemEvents.update, function(event) {
-    // шаблон списка продуктов (принимает переменную products)
-    self.options.productsListTemplate(event.insalesFavorites.products);
-    // шаблон списка вариантов (принимает переменную variants)
-    self.options.variantsListTemplate(event.insalesFavorites.variants);
-  });
+  const updateCounter = (event) => {
+    const productsSize = self.productIds.length;
+    let template = productsSize === 0 
+      ? (self.options.counterTemplateEmpty || self.options.counterTemplate)
+      : self.options.counterTemplate;
+    
+    const _counterContent = template.replace('%c%', productsSize);
+    const counters = getAllElements(getDataAttrName(systemSelectors.counter));
+    
+    counters.forEach(counter => {
+      counter.innerHTML = _counterContent;
+      counter.dataset[kebabToCamel(systemSelectors.counterParam)] = productsSize;
+      counter.setAttribute(systemSelectors.counter, productsSize);
 
-
-  $(document).on(systemEvents.update, function(event) {
-    var template = self.options.counterTemplate
-    var productsSize = self.productIds.length;
-    if (productsSize == 0) {
-      template = self.options.counterTemplateEmpty || self.options.counterTemplate;
-    }
-    var _counterContent = template.replace( '%c%', productsSize )
-    var $counter = $(getDataAttrName( systemSelectors.counter ));
-    $counter.html( _counterContent ).data(systemSelectors.counterParam, productsSize).attr(systemSelectors.counter, productsSize);
-
-    if (productsSize == 0) {
-      $counter.addClass(self.options.classes.empty).removeClass(self.options.classes.full)
-    }else{
-      $counter.removeClass(self.options.classes.empty).addClass(self.options.classes.full)
-    }
+      if (productsSize === 0) {
+        counter.classList.add(self.options.classes.empty);
+        counter.classList.remove(self.options.classes.full);
+      } else {
+        counter.classList.remove(self.options.classes.empty);
+        counter.classList.add(self.options.classes.full);
+      }
+    });
+    
     // переключить классы
-    self.checkFavoritesProducts()
-  });
+    self.checkFavoritesProducts();
+  };
 
+  document.addEventListener(systemEvents.update, updateCounter);
 }
 
 function getDataAttrName(name, value) {
-  let resultName = (value) ? name + '="'+value+'"' : name;
-
-  return '[' + resultName + ']';
+  const resultName = value ? `${name}="${value}"` : name;
+  return `[${resultName}]`;
 }
 
-function testValidId(id) {
-  var patchId = patchNumber(id);
+function isValidId(id) {
+  const patchId = patchNumber(id);
   return patchId > 1;
+}
+
+export function kebabToCamel(str) {
+  return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
 }
