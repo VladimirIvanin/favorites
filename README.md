@@ -7,8 +7,9 @@
 ```js
 var Favorite = new Favorites({
   // debug: true,
-  buttonNotAddedText: 'Добавить в избранное', // текст неактивной кнопки
-  buttonAddedText: 'Добавлен в избранное', // текст активной кнопки
+  // если кнопка содержит текст
+  // buttonNotAddedText: 'Добавить в избранное', 
+  // buttonAddedText: 'Добавлен в избранное', 
   onUpdate: function (data) {
     console.log(data.products);
   }
