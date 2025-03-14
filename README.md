@@ -66,7 +66,7 @@ var Favorite = new Favorites({
 
 ## События / callbacks
 
-Модуль поддерживает EventBus (для common.js v2) и jQuery события
+Модуль поддерживает EventBus (для common.js v2)
 
 | Событие | Назначение | Callback |
 |---------|-----------|----------|
